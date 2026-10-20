@@ -39,5 +39,21 @@ services:
       database:
         condition: service_healthy
 
+  admin-web:
+    build:
+      context: .
+      dockerfile: apps/admin-web/Dockerfile
+    command: npm run web:dev
+    environment:
+      API_INTERNAL_URL: http://api:3000
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - ./apps/admin-web:/app/apps/admin-web
+      - /app/node_modules
+      - /app/apps/admin-web/.next
+    depends_on:
+      - api
+
 volumes:
   yalla-postgres-data:
