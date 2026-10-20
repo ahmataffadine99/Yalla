@@ -8,8 +8,8 @@ export function SiteHeader() {
         <a href="#fonctionnement">Comment ça marche</a>
         <a href="#ndjamena">N’Djamena</a>
       </nav>
-      <a className="header-link" href="#demarrer">
-        Bientôt disponible
+      <a className="header-link" href="/inscription">
+        Créer un compte
         <span aria-hidden="true">↗</span>
       </a>
     </header>

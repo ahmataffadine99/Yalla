@@ -60,9 +60,23 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
           .integer()
           .min(0)
           .default(10),
-        TWILIO_ACCOUNT_SID: Joi.string().allow('').default(''),
-        TWILIO_AUTH_TOKEN: Joi.string().allow('').default(''),
-        TWILIO_VERIFY_SERVICE_SID: Joi.string().allow('').default(''),
+        SMTP_HOST: Joi.string().allow('').default(''),
+        SMTP_PORT: Joi.number().integer().min(1).max(65535).default(587),
+        SMTP_SECURE: Joi.boolean().truthy('true').falsy('false').default(false),
+        SMTP_USER: Joi.string().allow('').default(''),
+        SMTP_PASSWORD: Joi.string().allow('').default(''),
+        SMTP_FROM: Joi.string().allow('').default(''),
+        AUTH_TOKEN_SECRET: Joi.string()
+          .min(32)
+          .when('NODE_ENV', {
+            is: 'production',
+            then: Joi.invalid(
+              'local-only-change-this-secret-before-production',
+            ).required(),
+            otherwise: Joi.string()
+              .min(32)
+              .default('local-only-change-this-secret-before-production'),
+          }),
       }),
     }),
     DatabaseModule,
