@@ -30,10 +30,27 @@ AUTH_TOKEN_SECRET=
 
 `SMTP_USER` et `SMTP_PASSWORD` doivent être tous deux renseignés ou tous deux laissés vides. `SMTP_FROM` est l'adresse expéditrice autorisée par le fournisseur. `AUTH_TOKEN_SECRET` doit être remplacé par une valeur aléatoire d'au moins 32 caractères avant tout déploiement ; la valeur d'exemple est réservée au développement local.
 
+### Exemple avec Gmail
+
+Pour un test personnel, un compte Gmail peut envoyer les messages par SMTP avec un mot de passe d'application. Active d'abord la validation en deux étapes du compte Google, puis crée un mot de passe d'application sur [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords). Google peut ne pas proposer cette option pour certains types de comptes ou réglages de sécurité ; consulte son [guide officiel](https://support.google.com/accounts/answer/185833) si elle n'apparaît pas.
+
+Remplace `ton-adresse@gmail.com` par ton adresse, et utilise le mot de passe d'application généré (pas le mot de passe normal du compte) :
+
+```dotenv
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=ton-adresse@gmail.com
+SMTP_PASSWORD=mot-de-passe-application
+SMTP_FROM=ton-adresse@gmail.com
+```
+
+Garde ce mot de passe dans le fichier `.env` local et ne le partage pas. Si tu utilises un autre fournisseur, demande-lui son adresse SMTP, son port et ses identifiants : les valeurs Gmail ci-dessus ne s'appliquent pas aux autres services.
+
 Redémarrer ensuite l'API :
 
 ```powershell
-docker compose up -d --build api
+docker compose up -d api
 ```
 
 Créer les tables d'inscription une seule fois sur la base configurée :

@@ -74,9 +74,9 @@ export function VehicleSelection() {
       </Link>
       <section aria-labelledby="offers-title" className="offers-card">
         <p className="eyebrow">VOTRE TRAJET À N’DJAMENA</p>
-        <h1 id="offers-title">Choisissez votre véhicule</h1>
+        <h1 id="offers-title">Choisissez une course</h1>
         <p className="offers-description">
-          Sélectionnez l’option qui correspond à votre trajet.
+          Comparez les options disponibles pour ce trajet.
         </p>
 
         {isLoading ? (

@@ -15,12 +15,6 @@ type RoadRoute = {
   durationMinutes: number;
   coordinates: Coordinates[];
   fareXaf: number;
-  minimumFareXaf: number;
-  rates: {
-    baseFareXaf: number;
-    pricePerKilometerXaf: number;
-    pricePerMinuteXaf: number;
-  };
   vehicleOptions: {
     vehicleType: 'express' | 'standard' | 'ousra';
     fareXaf: number;
@@ -257,6 +251,25 @@ export function RoutePreview() {
       }
 
       setRoute(result);
+      try {
+        sessionStorage.setItem(
+          ROUTE_QUOTE_STORAGE_KEY,
+          JSON.stringify({
+            originLabel,
+            destinationLabel,
+            distanceKm: result.distanceKm,
+            durationMinutes: result.durationMinutes,
+            fareXaf: result.fareXaf,
+            vehicleOptions: result.vehicleOptions,
+          }),
+        );
+      } catch {
+        throw new Error(
+          'Impossible de préparer le choix de course. Vérifiez les paramètres de stockage du navigateur et réessayez.',
+        );
+      }
+
+      router.push('/offres');
     } catch (routeError) {
       setError(
         routeError instanceof Error
@@ -266,33 +279,6 @@ export function RoutePreview() {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  function openVehicleSelection() {
-    if (!route) {
-      return;
-    }
-
-    try {
-      sessionStorage.setItem(
-        ROUTE_QUOTE_STORAGE_KEY,
-        JSON.stringify({
-          originLabel,
-          destinationLabel,
-          distanceKm: route.distanceKm,
-          durationMinutes: route.durationMinutes,
-          fareXaf: route.fareXaf,
-          vehicleOptions: route.vehicleOptions,
-        }),
-      );
-    } catch {
-      setError(
-        'Impossible de conserver cette estimation. Vérifiez les paramètres de stockage du navigateur et réessayez.',
-      );
-      return;
-    }
-
-    router.push('/offres');
   }
 
   return (
@@ -349,27 +335,6 @@ export function RoutePreview() {
         >
           {isLoading ? 'Calcul du prix…' : 'Voir le prix'}
         </button>
-        {route && (
-          <p aria-live="polite" className="route-result">
-            <small>ESTIMATION YALLA EXPRESS</small>
-            <strong>
-              {route.fareXaf.toLocaleString('fr-FR')} FCFA
-            </strong>
-            <strong>{route.distanceKm.toFixed(2)} km</strong>
-            <span>
-              Environ {route.durationMinutes.toFixed(0)} min, hors trafic.
-            </span>
-          </p>
-        )}
-        {route && (
-          <button
-            className="route-submit"
-            onClick={openVehicleSelection}
-            type="button"
-          >
-            Voir les véhicules
-          </button>
-        )}
         {error && (
           <p aria-live="assertive" className="route-error">
             {error}
@@ -377,8 +342,8 @@ export function RoutePreview() {
         )}
         <p className="booking-notice">
           Les points choisis sont transmis à OpenStreetMap pour nommer les
-          lieux. Les tarifs Standard et Ousra s’affichent après le choix du
-          véhicule ; réservation bientôt disponible.
+          lieux. Après le calcul, tu verras les trois tarifs et choisiras le
+          passager sur l’écran suivant. La réservation n’est pas encore active.
         </p>
       </div>
     </div>
