@@ -60,6 +60,9 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
           .integer()
           .min(0)
           .default(10),
+        TWILIO_ACCOUNT_SID: Joi.string().allow('').default(''),
+        TWILIO_AUTH_TOKEN: Joi.string().allow('').default(''),
+        TWILIO_VERIFY_SERVICE_SID: Joi.string().allow('').default(''),
       }),
     }),
     DatabaseModule,

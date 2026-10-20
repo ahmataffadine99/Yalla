@@ -19,6 +19,8 @@ Les règles de réutilisation des composants et de commentaires pour **tout le p
 
 L'évaluation préliminaire du routage à N'Djamena et le protocole de validation terrain sont décrits dans [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md). Aucun fournisseur ni tarif n'y est déclaré validé.
 
+La vérification de numéro par SMS via Twilio Verify et ses étapes de configuration locale sont décrites dans [docs/AUTHENTIFICATION_TELEPHONE.md](./docs/AUTHENTIFICATION_TELEPHONE.md). Cette première étape vérifie un numéro mais ne crée pas encore de compte ni de session.
+
 Le calculateur de prix de l'API applique la formule de départ avec un minimum de 1 000 FCFA. Les taux de prise en charge, au kilomètre et à la minute restent à valider ; aucun devis client ne sera activé avant leur configuration et le choix d'un fournisseur d'itinéraires.
 
 L'API expose `POST /api/v1/locations/route` pour obtenir la distance routière, la durée estimée et la géométrie depuis un serveur compatible OSRM (`ROUTING_BASE_URL`), ainsi que `POST /api/v1/locations/place-name` pour nommer un point via un service de géocodage inversé (`PLACE_NAME_BASE_URL`). Le site client permet de choisir les points sur une carte et d'afficher ce trajet. Les coordonnées choisies sont envoyées au fournisseur de noms de lieux. La réservation et le calcul d'un prix client ne sont pas encore disponibles ; voir [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md) avant toute utilisation.
