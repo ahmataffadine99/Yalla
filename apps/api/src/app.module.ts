@@ -51,11 +51,11 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
           .uri({ scheme: ['http', 'https'] })
           .allow('')
           .optional(),
-        FARE_BASE_XAF: Joi.number().integer().min(0).default(250),
+        FARE_BASE_XAF: Joi.number().integer().min(0).default(1000),
         FARE_PRICE_PER_KILOMETER_XAF: Joi.number()
           .integer()
           .min(0)
-          .default(100),
+          .default(350),
         FARE_PRICE_PER_MINUTE_XAF: Joi.number()
           .integer()
           .min(0)

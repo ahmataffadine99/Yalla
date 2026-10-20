@@ -227,36 +227,36 @@ test('calculates a route fare using the configured provisional XAF rates', () =>
   const service = new PricingService({
     getOrThrow(key) {
       return {
-        FARE_BASE_XAF: 250,
-        FARE_PRICE_PER_KILOMETER_XAF: 100,
+        FARE_BASE_XAF: 1000,
+        FARE_PRICE_PER_KILOMETER_XAF: 350,
         FARE_PRICE_PER_MINUTE_XAF: 10,
       }[key];
     },
   });
 
   assert.deepEqual(service.calculateRouteFare(7.6517, 11.72), {
-    fareXaf: 1133,
+    fareXaf: 3796,
     minimumFareXaf: 1000,
     rates: {
-      baseFareXaf: 250,
-      pricePerKilometerXaf: 100,
+      baseFareXaf: 1000,
+      pricePerKilometerXaf: 350,
       pricePerMinuteXaf: 10,
     },
   });
 });
 
-test('keeps short route quotes at the 1000 XAF minimum', () => {
+test('includes the 1000 XAF base fare on short routes', () => {
   const service = new PricingService({
     getOrThrow(key) {
       return {
-        FARE_BASE_XAF: 250,
-        FARE_PRICE_PER_KILOMETER_XAF: 100,
+        FARE_BASE_XAF: 1000,
+        FARE_PRICE_PER_KILOMETER_XAF: 350,
         FARE_PRICE_PER_MINUTE_XAF: 10,
       }[key];
     },
   });
 
-  assert.equal(service.calculateRouteFare(0.5, 1).fareXaf, 1000);
+  assert.equal(service.calculateRouteFare(0.5, 1).fareXaf, 1185);
 });
 
 test('returns a route and server-calculated fare from the quote endpoint', async () => {
@@ -270,11 +270,11 @@ test('returns a route and server-calculated fare from the quote endpoint', async
     {},
     {
       calculateRouteFare: () => ({
-        fareXaf: 1133,
+        fareXaf: 3796,
         minimumFareXaf: 1000,
         rates: {
-          baseFareXaf: 250,
-          pricePerKilometerXaf: 100,
+          baseFareXaf: 1000,
+          pricePerKilometerXaf: 350,
           pricePerMinuteXaf: 10,
         },
       }),
@@ -283,11 +283,11 @@ test('returns a route and server-calculated fare from the quote endpoint', async
 
   assert.deepEqual(await controller.getQuote(request), {
     ...route,
-    fareXaf: 1133,
+    fareXaf: 3796,
     minimumFareXaf: 1000,
     rates: {
-      baseFareXaf: 250,
-      pricePerKilometerXaf: 100,
+      baseFareXaf: 1000,
+      pricePerKilometerXaf: 350,
       pricePerMinuteXaf: 10,
     },
   });
