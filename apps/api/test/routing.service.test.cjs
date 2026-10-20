@@ -36,12 +36,17 @@ test('requests a driving route and returns kilometers and minutes', async () => 
       url.pathname,
       '/route/v1/driving/15.03,12.1;15.05,12.12',
     );
-    assert.equal(url.searchParams.get('overview'), 'false');
+    assert.equal(url.searchParams.get('overview'), 'full');
+    assert.equal(url.searchParams.get('geometries'), 'geojson');
     assert.equal(url.searchParams.get('steps'), 'false');
 
     return Response.json({
       code: 'Ok',
-      routes: [{ distance: 4690, duration: 343 }],
+      routes: [{
+        distance: 4690,
+        duration: 343,
+        geometry: { coordinates: [[15.03, 12.1], [15.05, 12.12]] },
+      }],
     });
   }, async () => {
     assert.deepEqual(await createService().getRoute(request), {
@@ -49,6 +54,10 @@ test('requests a driving route and returns kilometers and minutes', async () => 
       durationSeconds: 343,
       distanceKm: 4.69,
       durationMinutes: 343 / 60,
+      coordinates: [
+        { latitude: 12.1, longitude: 15.03 },
+        { latitude: 12.12, longitude: 15.05 },
+      ],
     });
   });
 });
@@ -91,6 +100,22 @@ test('rejects a provider response without a valid route', async () => {
 
 test('rejects malformed provider payloads instead of returning invalid results', async () => {
   await withMockedFetch(async () => Response.json(null), async () => {
+    await assert.rejects(
+      createService().getRoute(request),
+      (error) => error.getStatus() === 502,
+    );
+  });
+});
+
+test('rejects invalid route geometry', async () => {
+  await withMockedFetch(async () => Response.json({
+    code: 'Ok',
+    routes: [{
+      distance: 1000,
+      duration: 60,
+      geometry: { coordinates: [[999, 12.1], [15.05, 12.12]] },
+    }],
+  }), async () => {
     await assert.rejects(
       createService().getRoute(request),
       (error) => error.getStatus() === 502,

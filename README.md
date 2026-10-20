@@ -7,7 +7,7 @@ Plateforme de transport à la demande lancée à N'Djamena. Le monorepo sépare 
 ```text
 apps/
   api/          API NestJS, monolithe modulaire, REST sous /api/v1
-  client-web/   site public client Next.js (socle visuel, réservation non connectée)
+  client-web/   site public client Next.js (choix des points et aperçu de trajet)
   admin-web/    tableau de bord interne Next.js, séparé du site client
   mobile/       emplacement documenté, Flutter à initialiser plus tard
 compose.yaml    PostgreSQL/PostGIS, API, sites web et moteur OSRM local optionnel
@@ -21,7 +21,7 @@ L'évaluation préliminaire du routage à N'Djamena et le protocole de validatio
 
 Le calculateur de prix de l'API applique la formule de départ avec un minimum de 1 000 FCFA. Les taux de prise en charge, au kilomètre et à la minute restent à valider ; aucun devis client ne sera activé avant leur configuration et le choix d'un fournisseur d'itinéraires.
 
-L'API expose également `POST /api/v1/locations/route` pour obtenir la distance routière et la durée depuis un serveur compatible OSRM configuré par `ROUTING_BASE_URL`. Aucun fournisseur n'est configuré par défaut ; voir [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md) avant toute utilisation.
+L'API expose également `POST /api/v1/locations/route` pour obtenir la distance routière, la durée estimée et la géométrie depuis un serveur compatible OSRM configuré par `ROUTING_BASE_URL`. Le site client permet de choisir les points sur une carte et d'afficher ce trajet. La réservation et le calcul d'un prix client ne sont pas encore disponibles ; voir [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md) avant toute utilisation.
 
 ## Démarrage local
 
