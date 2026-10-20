@@ -21,6 +21,8 @@ L'évaluation préliminaire du routage à N'Djamena et le protocole de validatio
 
 Le calculateur de prix de l'API applique la formule de départ avec un minimum de 1 000 FCFA. Les taux de prise en charge, au kilomètre et à la minute restent à valider ; aucun devis client ne sera activé avant leur configuration et le choix d'un fournisseur d'itinéraires.
 
+L'API expose également `POST /api/v1/locations/route` pour obtenir la distance routière et la durée depuis un serveur compatible OSRM configuré par `ROUTING_BASE_URL`. Aucun fournisseur n'est configuré par défaut ; voir [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md) avant toute utilisation.
+
 ## Démarrage local
 
 1. Copier `.env.example` vers `.env` et ajuster les valeurs uniquement pour l'environnement local.

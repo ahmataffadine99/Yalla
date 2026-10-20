@@ -43,6 +43,10 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
         DATABASE_NAME: Joi.string().default('yalla_dev'),
         DATABASE_USER: Joi.string().default('yalla'),
         DATABASE_PASSWORD: Joi.string().min(1).default('yalla_dev_only'),
+        ROUTING_BASE_URL: Joi.string()
+          .uri({ scheme: ['http', 'https'] })
+          .allow('')
+          .optional(),
       }),
     }),
     DatabaseModule,

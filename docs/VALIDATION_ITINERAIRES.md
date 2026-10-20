@@ -2,6 +2,8 @@
 
 **État : recherche préliminaire, aucun fournisseur sélectionné, aucun tarif activé.**
 
+L'API contient maintenant une première intégration de routage compatible avec le protocole OSRM. Elle attend une instance choisie et configurée par l'équipe ; aucun service public n'est utilisé par défaut. Cette étape technique ne valide pas encore un fournisseur ni la précision des routes à N'Djamena.
+
 ## Ce qu'il faut calculer
 
 Pour un devis, le téléphone fournit ou laisse choisir les coordonnées GPS du départ et de l'arrivée. Le serveur demande ensuite un itinéraire routier en mode voiture. Le moteur renvoie notamment la distance routière, la durée estimée et la géométrie du parcours. Le serveur calcule alors le tarif ; le navigateur ou le téléphone ne décide jamais du prix.
@@ -88,6 +90,23 @@ Chaque mesure de terrain doit noter la date, le profil du véhicule, la période
 3. Écrire des tests avec des réponses contrôlées : chemin valide, échec de calcul, coordonnées ajustées excessivement, route trop longue, délai dépassé et tarif arrondi.
 4. Faire calculer le devis côté API avec une règle tarifaire versionnée. Le calculateur initial applique déjà le minimum de 1 000 FCFA et prend les autres taux comme paramètres obligatoires ; il ne choisit pas lui-même des tarifs. Refuser explicitement le devis si l'itinéraire est absent ou invalide ; ne pas inventer de distance ou de prix de secours.
 5. Exposer le devis au client seulement après tests fonctionnels et validation terrain. Le fournisseur choisi restera remplaçable si les essais réels révèlent une couverture insuffisante.
+
+### Intégration API préparée
+
+L'endpoint `POST /api/v1/locations/route` reçoit les coordonnées GPS du départ et de l'arrivée et retourne la distance routière en mètres/kilomètres ainsi que la durée en secondes/minutes. `ROUTING_BASE_URL` doit désigner la racine d'un serveur compatible avec l'API OSRM ; la variable est vide dans `.env.example`, donc l'endpoint répond explicitement « service indisponible » tant qu'aucun moteur n'est configuré. Un délai maximal de cinq secondes est appliqué et les réponses absentes ou invalides ne sont pas remplacées par une distance estimée.
+
+Exemple de corps JSON :
+
+```json
+{
+  "originLatitude": 12.1,
+  "originLongitude": 15.03,
+  "destinationLatitude": 12.12,
+  "destinationLongitude": 15.05
+}
+```
+
+Cette intégration ne calcule pas encore un prix ni ne choisit le moteur cartographique. Avant de l'utiliser pour des clients, il faut configurer un serveur autorisé, vérifier les licences, puis comparer ses résultats aux trajets réels et décider comment traiter les points éloignés des routes.
 
 ## Sources
 
