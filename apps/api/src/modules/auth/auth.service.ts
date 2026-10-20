@@ -19,7 +19,7 @@ import {
   createAccessToken,
 } from './access-token';
 import { EmailService } from './email.service';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '../users/user.entity';
 
 const scrypt = promisify(scryptCallback);
 const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;

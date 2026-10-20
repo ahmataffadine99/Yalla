@@ -51,7 +51,9 @@ export function AuthForm({ mode }: AuthFormProps) {
       };
 
       if (!response.ok) {
-        throw new Error(readApiMessage(result, 'Une erreur est survenue.'));
+        throw new Error(
+          readApiMessage(result, 'Une erreur est survenue.'),
+        );
       }
 
       if (isRegister) {
@@ -72,7 +74,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     } catch (requestError) {
       setError(
         requestError instanceof Error
-          ? requestError.message
+          ? getUserFacingAuthError(requestError.message)
           : 'Impossible de contacter le service. Réessaie.',
       );
     } finally {
@@ -103,7 +105,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     } catch (requestError) {
       setError(
         requestError instanceof Error
-          ? requestError.message
+          ? getUserFacingAuthError(requestError.message)
           : 'Impossible de contacter le service. Réessaie.',
       );
     } finally {
@@ -231,4 +233,16 @@ function readApiMessage(result: ApiMessage, fallback: string): string {
     return message || fallback;
   }
   return fallback;
+}
+
+function getUserFacingAuthError(message: string): string {
+  if (message === 'Email delivery is not configured') {
+    return 'L’inscription par e-mail n’est pas encore configurée sur le serveur. Il faut renseigner les paramètres SMTP dans le fichier .env du projet, puis redémarrer l’API.';
+  }
+
+  if (message === 'The confirmation email could not be sent') {
+    return 'Le serveur e-mail n’a pas accepté l’envoi. Vérifie les paramètres SMTP dans le fichier .env du projet.';
+  }
+
+  return message;
 }

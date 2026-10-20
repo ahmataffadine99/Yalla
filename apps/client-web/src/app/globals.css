@@ -436,6 +436,24 @@ h1 span {
   padding: 14px;
 }
 
+.offers-route-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.offers-route-heading > strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.offers-route-heading a {
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .offers-route > div small,
 .offers-route > div strong {
   display: block;
@@ -460,10 +478,85 @@ h1 span {
   margin: 0;
 }
 
+.passenger-picker {
+  border: 0;
+  display: grid;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+.passenger-picker legend {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.passenger-choice {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  gap: 10px;
+  min-height: 43px;
+  padding: 10px 12px;
+}
+
+.passenger-choice.is-selected {
+  background: var(--green-pale);
+  border-color: #aac9b6;
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.passenger-choice input {
+  accent-color: var(--green);
+  margin: 0;
+}
+
+.passenger-fields {
+  display: grid;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.passenger-fields label {
+  color: #405249;
+  display: grid;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 6px;
+}
+
+.passenger-fields input {
+  border: 1px solid #dce3dc;
+  border-radius: 7px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  min-height: 42px;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.passenger-fields input:focus-visible {
+  border-color: var(--green);
+  outline: 2px solid rgba(30, 118, 85, 0.14);
+}
+
+.passenger-fields small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+
 .vehicle-options {
   display: grid;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .vehicle-option {
@@ -514,6 +607,30 @@ h1 span {
 .vehicle-option-price {
   color: var(--green-dark);
   text-align: right;
+}
+
+.selected-trip-summary {
+  align-items: center;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 16px;
+}
+
+.selected-trip-summary > span {
+  display: grid;
+  gap: 4px;
+}
+
+.selected-trip-summary strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.selected-trip-summary small {
+  color: var(--muted);
+  font-size: 10px;
 }
 
 .offers-notice,

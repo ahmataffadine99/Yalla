@@ -2,6 +2,8 @@
 
 L'inscription demande une adresse e-mail, un numéro au format international (E.164, par exemple `+33612345678`) et un mot de passe d'au moins 12 caractères. Le numéro est enregistré, mais n'est pas vérifié par SMS. Le client doit confirmer son adresse e-mail avant de pouvoir se connecter.
 
+Le modèle TypeORM `UserEntity` est défini dans `apps/api/src/modules/users/user.entity.ts`. La migration `apps/api/src/modules/database/migrations/1710000000000-CreateUsers.ts` crée la table PostgreSQL `users` ; les migrations sont explicites et `synchronize` est désactivé. `UsersModule` enregistre le modèle auprès de TypeORM et l'exporte pour `AuthModule`. Les routes HTTP sont bien définies dans `AuthController` (`apps/api/src/modules/auth/auth.controller.ts`), et `AuthService` porte la logique d'inscription, de confirmation et de connexion.
+
 L'API expose :
 
 - `POST /api/v1/auth/register` pour créer un compte en attente et envoyer un lien ;
@@ -14,7 +16,7 @@ Les mots de passe sont hachés côté serveur avec scrypt. Les liens contiennent
 
 ## Configuration e-mail locale
 
-L'API utilise un serveur SMTP générique ; aucun fournisseur n'est imposé. Récupérer les paramètres SMTP auprès du service e-mail choisi et les ajouter uniquement au fichier `.env` local :
+L'API utilise un serveur SMTP générique ; aucun fournisseur n'est imposé. Récupérer les paramètres SMTP auprès du service e-mail choisi et les ajouter uniquement au fichier `.env` local à la racine du dépôt (à côté de `compose.yaml`) :
 
 ```dotenv
 SMTP_HOST=
