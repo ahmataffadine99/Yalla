@@ -33,6 +33,8 @@ La documentation HERE liste le Tchad comme pays à couverture intermédiaire **I
 
 **Décision : candidat à une comparaison terrain, pas encore choisi.** Obtenir une clé d'essai, vérifier les coûts/conditions actuels et tester le produit exact (itinéraire voiture, géocodage, carte) avant de l'intégrer.
 
+Pour le pilote, HERE est le premier candidat à qualifier : c'est le fournisseur consulté qui nomme explicitement le Tchad et documente un niveau de routage urbain/point à point. Son prix commercial n'est pas déterminable à partir de la page publique consultée ; il faut demander un devis ou vérifier les conditions de l'offre de démarrage avant tout engagement.
+
 ### OpenStreetMap et OSRM
 
 OpenStreetMap fournit des données cartographiques ouvertes, sous ODbL et avec obligations d'attribution. Les serveurs publics de tuiles et de géocodage sont des services communautaires à capacité limitée, sans garantie d'exploitation commerciale à l'échelle d'une plateforme. Leur politique demande attribution visible, cache et respect des limites ; le service public Nominatim ne doit pas être utilisé pour l'auto-complétion d'adresse et limite les requêtes.
@@ -41,11 +43,23 @@ Une requête isolée au démonstrateur public OSRM a accepté deux coordonnées 
 
 **Décision : données OSM + moteur auto-hébergé ou fournisseur fondé sur OSM restent des options à examiner.** Le démonstrateur public OSRM ne doit pas être l'infrastructure de production.
 
+Auto-héberger OSRM évite une facturation par requête à un service de routage tiers, mais ne rend pas l'exploitation gratuite : il faut héberger et surveiller le moteur, importer et actualiser les données, et tester la qualité du réseau routier. Les données OpenStreetMap restent soumises à l'ODbL et aux obligations d'attribution.
+
 ### Google Maps Platform
 
-Google publie une page officielle de couverture Routes API organisée par pays. La documentation consultée confirme l'existence de la table et des fonctionnalités listées, mais les éléments vérifiables ici ne suffisent pas à conclure sur la qualité de routage voiture à N'Djamena.
+Google publie une page officielle de couverture Routes API organisée par pays ; les éléments consultés ne permettent pas de confirmer une couverture voiture suffisamment fiable à N'Djamena. La facturation est à l'usage et dépend des SKU et du volume. Il faut vérifier le SKU réellement déclenché par le parcours Yalla et le coût à l'échelle prévue, plutôt que de se baser sur le crédit d'essai ou les prix d'une autre API Google.
 
 **Décision : ne pas conclure à partir de la seule disponibilité générale de Google Maps.** Tester des trajets locaux avec un accès API de développement et comparer les routes calculées aux trajets réels avant d'en faire un candidat retenu.
+
+### Mapbox
+
+La Directions API documente le calcul d'itinéraires voiture. En revanche, la page tarifaire Mapbox consultée exige une licence commerciale spécifique pour les usages liés aux véhicules, y compris les applications destinées à leur utilisation ; les conditions affichées prévoient un abonnement annuel et peuvent inclure un coût par utilisateur. Le coût exact doit donc être demandé et vérifié pour le cas Yalla. La documentation récupérée ne suffit pas à valider la qualité de couverture à N'Djamena.
+
+**Décision : ne pas retenir Mapbox pour le pilote sans confirmation écrite de la licence commerciale et de son coût, puis sans test terrain.**
+
+### Conclusion provisoire
+
+Comparer d'abord HERE à des trajets réellement parcourus à N'Djamena, tout en demandant les conditions tarifaires commerciales. Garder OSRM auto-hébergé comme solution de repli à évaluer si l'équipe peut prendre en charge son exploitation. Google et Mapbox restent des candidats non qualifiés ; aucun n'est déclaré gagnant sur la seule base de sa couverture mondiale ou de son prix affiché. Le choix reste conditionné aux essais et au coût réel.
 
 ### Repère de prix public
 
@@ -81,8 +95,13 @@ Chaque mesure de terrain doit noter la date, le profil du véhicule, la période
 - [HERE — niveaux de couverture, dont I1](https://docs.here.com/routing/docs/routing-v8-coverage-levels)
 - [HERE — couverture du routage voiture](https://docs.here.com/routing/docs/routing-v8-car-routing-coverage)
 - [HERE — documentation du routage voiture](https://docs.here.com/routing/docs/routing-v8-car-routing)
+- [HERE — demander une offre tarifaire](https://www.here.com/get-started/pricing)
 - [Google Maps Platform — couverture Routes API](https://developers.google.com/maps/documentation/routes/coverage)
+- [Google Maps Platform — tarifs et facturation](https://developers.google.com/maps/billing-and-pricing/pricing)
+- [Mapbox — Directions API](https://docs.mapbox.com/api/navigation/directions/)
+- [Mapbox — tarifs et licence pour usage véhicule](https://www.mapbox.com/pricing/)
 - [OSRM — API de routage](https://project-osrm.org/docs/v5.24.0/api/)
+- [OSRM — dépôt et licence du moteur](https://github.com/Project-OSRM/osrm-backend)
 - [OpenStreetMap — licence et attribution](https://www.openstreetmap.org/copyright)
 - [OpenStreetMap — politique des tuiles](https://operations.osmfoundation.org/policies/tiles/)
 - [Nominatim public — politique de géocodage](https://operations.osmfoundation.org/policies/nominatim/)
