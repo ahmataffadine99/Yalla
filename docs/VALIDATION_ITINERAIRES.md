@@ -117,6 +117,18 @@ Pour préparer un moteur local avec les données du Tchad : lancer `.\scripts\se
 
 **Essai local du 20 octobre 2026 :** OSRM a répondu avec un itinéraire pour `(12.1, 15.03)` → `(12.12, 15.05)` : 20 212,9 mètres et 1 305,6 secondes estimées. L'API Yalla a retourné les mêmes valeurs. Ce test prouve que la chaîne technique fonctionne sur ces deux points ; il ne confirme pas que la route proposée soit la meilleure ou la route réellement empruntée.
 
+**Contrôle de plausibilité le 20 octobre 2026 :** une personne connaissant bien N'Djamena a jugé plausibles les distances OSRM suivantes, calculées depuis des repères OpenStreetMap :
+
+| Départ → arrivée | Distance OSRM | Durée OSRM |
+|---|---:|---:|
+| Aéroport international → Place de la Nation | 7,65 km | 11 min 43 s |
+| Aéroport international → Marché Central | 8,82 km | 13 min 01 s |
+| Grande Mosquée → Place de la Nation | 1,93 km | 1 min 58 s |
+| Stade Idriss Mahamat Ouya → Université Roi Fayçal | 3,99 km | 4 min 43 s |
+| Place de la Nation → Marché Central | 1,82 km | 2 min 10 s |
+
+Cet avis est un premier contrôle de cohérence des distances, pas une mesure GPS de trajets parcourus ni une validation des chemins, des points exacts de prise en charge ou des durées en conditions réelles. Les durées OSRM n'incluent pas le trafic.
+
 Exemple de corps JSON :
 
 ```json
