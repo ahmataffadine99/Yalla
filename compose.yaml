@@ -32,6 +32,7 @@ services:
       DATABASE_USER: ${POSTGRES_USER:-yalla}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-yalla_dev_only}
       ROUTING_BASE_URL: ${ROUTING_BASE_URL:-}
+      PLACE_NAME_BASE_URL: ${PLACE_NAME_BASE_URL:-}
     ports:
       - "127.0.0.1:3000:3000"
     volumes:

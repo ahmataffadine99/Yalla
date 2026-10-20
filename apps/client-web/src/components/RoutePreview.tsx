@@ -16,6 +16,10 @@ type RoadRoute = {
 
 type RouteApiResponse = RoadRoute;
 
+type PlaceNameResponse = {
+  label: string;
+};
+
 type PointSelection = 'origin' | 'destination';
 
 const API_BASE_URL =
@@ -28,11 +32,16 @@ export function RoutePreview() {
   const destinationMarkerRef = useRef<CircleMarker | null>(null);
   const routeLineRef = useRef<Polyline | null>(null);
   const pointSelectionRef = useRef<PointSelection>('origin');
+  const placeNameRequestRef = useRef({ origin: 0, destination: 0 });
   const [mapReady, setMapReady] = useState(false);
   const [pointSelection, setPointSelection] =
     useState<PointSelection>('origin');
   const [origin, setOrigin] = useState<Coordinates | null>(null);
   const [destination, setDestination] = useState<Coordinates | null>(null);
+  const [originLabel, setOriginLabel] = useState('Choisissez un point sur la carte');
+  const [destinationLabel, setDestinationLabel] = useState(
+    'Choisissez un point sur la carte',
+  );
   const [route, setRoute] = useState<RoadRoute | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,9 +76,13 @@ export function RoutePreview() {
 
         if (pointSelectionRef.current === 'origin') {
           setOrigin(point);
+          setOriginLabel('Recherche du lieu…');
+          void lookupPlaceName(point, 'origin');
           setPointSelection('destination');
         } else {
           setDestination(point);
+          setDestinationLabel('Recherche du lieu…');
+          void lookupPlaceName(point, 'destination');
         }
 
         setRoute(null);
@@ -162,6 +175,45 @@ export function RoutePreview() {
     });
   }, [destination, mapReady, origin, route]);
 
+  async function lookupPlaceName(
+    point: Coordinates,
+    selection: PointSelection,
+  ) {
+    const requestId = ++placeNameRequestRef.current[selection];
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/locations/place-name`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(point),
+      });
+      if (!response.ok) {
+        throw new Error('Place name could not be resolved');
+      }
+
+      const result = (await response.json()) as PlaceNameResponse;
+      if (requestId !== placeNameRequestRef.current[selection]) {
+        return;
+      }
+
+      if (selection === 'origin') {
+        setOriginLabel(result.label);
+      } else {
+        setDestinationLabel(result.label);
+      }
+    } catch {
+      if (requestId !== placeNameRequestRef.current[selection]) {
+        return;
+      }
+
+      if (selection === 'origin') {
+        setOriginLabel('Lieu non identifié');
+      } else {
+        setDestinationLabel('Lieu non identifié');
+      }
+    }
+  }
+
   async function calculateRoute() {
     if (!origin || !destination) {
       return;
@@ -237,11 +289,7 @@ export function RoutePreview() {
           <span className="point-dot pickup-dot" />
           <div>
             <small>VOTRE DÉPART</small>
-            <strong>
-              {origin
-                ? `${origin.latitude.toFixed(5)}, ${origin.longitude.toFixed(5)}`
-                : 'Touchez la carte pour choisir'}
-            </strong>
+            <strong>{originLabel}</strong>
           </div>
         </div>
         <span aria-hidden="true" className="route-divider" />
@@ -249,11 +297,7 @@ export function RoutePreview() {
           <span className="point-dot destination-dot" />
           <div>
             <small>VOTRE ARRIVÉE</small>
-            <strong>
-              {destination
-                ? `${destination.latitude.toFixed(5)}, ${destination.longitude.toFixed(5)}`
-                : 'Touchez la carte pour choisir'}
-            </strong>
+            <strong>{destinationLabel}</strong>
           </div>
         </div>
         <button
@@ -278,7 +322,8 @@ export function RoutePreview() {
           </p>
         )}
         <p className="booking-notice">
-          Estimation indicative. La réservation n’est pas encore disponible.
+          Les points choisis sont transmis à OpenStreetMap pour nommer les
+          lieux. Estimation hors trafic ; réservation bientôt disponible.
         </p>
       </div>
     </div>

@@ -2,7 +2,9 @@ const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const { plainToInstance } = require('class-transformer');
 const { validate } = require('class-validator');
+const { PlaceNameService } = require('../dist/modules/locations/place-name.service');
 const { RoutingService } = require('../dist/modules/locations/routing.service');
+const { PlaceNameDto } = require('../dist/modules/locations/place-name.dto');
 const { RouteRequestDto } = require('../dist/modules/locations/route-request.dto');
 
 const request = {
@@ -14,6 +16,12 @@ const request = {
 
 function createService(baseUrl = 'http://routing.local') {
   return new RoutingService({
+    get: () => baseUrl,
+  });
+}
+
+function createPlaceNameService(baseUrl = 'https://nominatim.local') {
+  return new PlaceNameService({
     get: () => baseUrl,
   });
 }
@@ -141,4 +149,74 @@ test('reports network failures as gateway errors', async () => {
       (error) => error.getStatus() === 502,
     );
   });
+});
+
+test('looks up a readable place name from selected coordinates', async () => {
+  await withMockedFetch(async (input, options) => {
+    const url = new URL(input);
+    assert.equal(url.pathname, '/reverse');
+    assert.equal(url.searchParams.get('lat'), '12.1');
+    assert.equal(url.searchParams.get('lon'), '15.03');
+    assert.equal(url.searchParams.get('format'), 'jsonv2');
+    assert.equal(options.headers['Accept-Language'], 'fr');
+
+    return Response.json({
+      address: {
+        road: 'Avenue Mobutu',
+        suburb: 'Gardole',
+        city: "N'Djamena",
+      },
+    });
+  }, async () => {
+    assert.deepEqual(
+      await createPlaceNameService().findName({
+        latitude: 12.1,
+        longitude: 15.03,
+      }),
+      { label: "Avenue Mobutu, Gardole, N'Djamena" },
+    );
+  });
+});
+
+test('caches place-name lookups for nearby selected coordinates', async () => {
+  let requestCount = 0;
+  await withMockedFetch(async () => {
+    requestCount += 1;
+    return Response.json({ name: 'Place de la Nation' });
+  }, async () => {
+    const service = createPlaceNameService();
+    const first = await service.findName({ latitude: 12.1, longitude: 15.03 });
+    const second = await service.findName({
+      latitude: 12.100001,
+      longitude: 15.030001,
+    });
+
+    assert.deepEqual(first, { label: 'Place de la Nation' });
+    assert.deepEqual(second, first);
+    assert.equal(requestCount, 1);
+  });
+});
+
+test('does not return coordinates as a fabricated place name', async () => {
+  await withMockedFetch(async () => Response.json({ address: {} }), async () => {
+    await assert.rejects(
+      createPlaceNameService().findName({ latitude: 12.1, longitude: 15.03 }),
+      (error) => error.getStatus() === 502,
+    );
+  });
+});
+
+test('fails explicitly when the place-name provider is not configured', async () => {
+  await assert.rejects(
+    createPlaceNameService('').findName({ latitude: 12.1, longitude: 15.03 }),
+    (error) => error.getStatus() === 503,
+  );
+});
+
+test('validates reverse-geocoding coordinates', async () => {
+  const dto = plainToInstance(PlaceNameDto, {
+    latitude: 12.1,
+    longitude: 181,
+  });
+  assert.ok((await validate(dto)).length > 0);
 });

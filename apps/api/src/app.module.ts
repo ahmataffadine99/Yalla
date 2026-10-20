@@ -47,6 +47,10 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
           .uri({ scheme: ['http', 'https'] })
           .allow('')
           .optional(),
+        PLACE_NAME_BASE_URL: Joi.string()
+          .uri({ scheme: ['http', 'https'] })
+          .allow('')
+          .optional(),
       }),
     }),
     DatabaseModule,
