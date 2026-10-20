@@ -61,7 +61,7 @@ La Directions API documente le calcul d'itinéraires voiture. En revanche, la pa
 
 ### Conclusion provisoire
 
-Comparer d'abord HERE à des trajets réellement parcourus à N'Djamena, tout en demandant les conditions tarifaires commerciales. Garder OSRM auto-hébergé comme solution de repli à évaluer si l'équipe peut prendre en charge son exploitation. Google et Mapbox restent des candidats non qualifiés ; aucun n'est déclaré gagnant sur la seule base de sa couverture mondiale ou de son prix affiché. Le choix reste conditionné aux essais et au coût réel.
+Pour le premier essai, Yalla utilise OSRM en local avec les données OpenStreetMap du Tchad : aucun compte fournisseur ni frais par requête ne sont nécessaires. Il reste à vérifier la qualité des routes à N'Djamena sur le terrain. HERE pourra être réévalué si ces essais révèlent des problèmes de couverture et si son coût est acceptable. Google et Mapbox restent des candidats non qualifiés ; aucun n'est retenu sur la seule base de sa couverture mondiale ou de son prix affiché.
 
 ### Repère de prix public
 
@@ -70,6 +70,24 @@ Numbeo publie des valeurs estimées de tarifs de taxi à N'Djamena (tarif initia
 **Décision : ne pas reprendre directement ces montants.** Les chiffres devront être confrontés à des chauffeurs, clients potentiels, coûts de véhicules et règles commerciales locales, puis validés par le propriétaire du produit.
 
 ## Protocole terrain recommandé
+
+### Ce que cette étape veut dire concrètement
+
+Le moteur local sait déjà répondre à une demande de trajet, mais un résultat technique ne prouve pas que le chemin proposé correspond à la réalité de N'Djamena. Il faut choisir quelques trajets courants, demander à un conducteur de les parcourir réellement, puis comparer le chemin et la distance observés à ceux calculés par OSRM. La durée réelle sert de contexte seulement : OSRM n'intègre pas les embouteillages en temps réel.
+
+Pour chaque essai, noter les coordonnées ou lieux publics de départ et d'arrivée, la distance donnée par OSRM, puis le trajet et la distance réellement parcourus par le conducteur. Enregistrer un parcours GPS uniquement avec son accord. Une personne qui n'est pas sur place ne peut pas fournir honnêtement ces mesures terrain ; elles ne doivent pas être remplacées par des valeurs inventées ou une deuxième réponse du même moteur.
+
+Fiche à remplir avec un conducteur à N'Djamena :
+
+| Essai | Départ et arrivée (lieux/coordonnées) | Distance OSRM | Distance réellement parcourue | Le chemin OSRM est-il praticable ? | Écart ou remarque |
+|---|---|---:|---:|---|---|
+| 1 |  |  |  |  |  |
+| 2 |  |  |  |  |  |
+| 3 |  |  |  |  |  |
+| 4 |  |  |  |  |  |
+| 5 |  |  |  |  |  |
+
+Commencer par trois à cinq trajets variés : court, plus long, axe fréquenté et rue secondaire. Si OSRM propose une route impraticable, manque le bon accès ou échoue, le noter même si les distances semblent proches. Ce premier petit échantillon sert à repérer les problèmes ; il ne suffit pas à déclarer toute la ville validée.
 
 Avant d'afficher un prix comme fiable :
 
