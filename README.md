@@ -10,7 +10,7 @@ apps/
   client-web/   site public client Next.js (socle visuel, réservation non connectée)
   admin-web/    tableau de bord interne Next.js, séparé du site client
   mobile/       emplacement documenté, Flutter à initialiser plus tard
-compose.yaml    PostgreSQL/PostGIS, API, site client et administration web
+compose.yaml    PostgreSQL/PostGIS, API, sites web et moteur OSRM local optionnel
 ```
 
 Les modules métier de l'API sont des frontières de code, pas des fonctionnalités terminées. Leur portée et les règles de contribution figurent dans [apps/api/src/modules/README.md](./apps/api/src/modules/README.md). Le cahier des charges et le document d'architecture détaillée restent des fichiers locaux ignorés par Git.
@@ -33,6 +33,30 @@ L'API expose également `POST /api/v1/locations/route` pour obtenir la distance 
 6. Vérifier la santé de l'API et de la base sur `http://localhost:3000/api/v1/health`.
 
 La base PostgreSQL est publiée uniquement sur l'interface locale, par défaut sur le port `18081`.
+
+### Essayer le routage OpenStreetMap en local
+
+OSRM est optionnel et n'est pas lancé par le démarrage standard. Pour préparer les données routières du Tchad avec Docker Desktop ouvert, exécuter depuis PowerShell à la racine :
+
+```powershell
+.\scripts\setup-osrm.ps1
+```
+
+Le script télécharge l'extrait OpenStreetMap de Geofabrik pour le Tchad et le prépare avec OSRM ; le téléchargement et le traitement peuvent prendre du temps et nécessiter plusieurs gigaoctets d'espace et de mémoire. Les fichiers cartographiques restent dans `routing/`, exclu de Git.
+
+Après la préparation, ajouter `ROUTING_BASE_URL=http://osrm:5000` dans le `.env` local, puis lancer :
+
+```powershell
+docker compose --profile routing up --build
+```
+
+L'API et OSRM communiquent dans Docker. Pour vérifier un trajet, exécuter dans PowerShell :
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/v1/locations/route -ContentType 'application/json' -Body '{"originLatitude":12.1,"originLongitude":15.03,"destinationLatitude":12.12,"destinationLongitude":15.05}'
+```
+
+Sans cette configuration et les données générées, aucun itinéraire n'est disponible. Cet essai local ne constitue pas une validation de la qualité des routes ni un déploiement de production. OSRM utilise ici le profil voiture OpenStreetMap standard et ne fournit pas une estimation du trafic en temps réel.
 
 ## Commandes utiles
 

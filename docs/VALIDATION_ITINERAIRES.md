@@ -2,7 +2,7 @@
 
 **État : recherche préliminaire, aucun fournisseur sélectionné, aucun tarif activé.**
 
-L'API contient maintenant une première intégration de routage compatible avec le protocole OSRM. Elle attend une instance choisie et configurée par l'équipe ; aucun service public n'est utilisé par défaut. Cette étape technique ne valide pas encore un fournisseur ni la précision des routes à N'Djamena.
+L'API contient maintenant une première intégration de routage compatible avec le protocole OSRM. Un profil Docker Compose et un script PowerShell permettent de préparer localement l'extrait OpenStreetMap du Tchad avec OSRM. Aucun service public n'est utilisé par défaut. Cette étape technique ne valide pas encore la précision des routes à N'Djamena.
 
 ## Ce qu'il faut calculer
 
@@ -93,7 +93,11 @@ Chaque mesure de terrain doit noter la date, le profil du véhicule, la période
 
 ### Intégration API préparée
 
-L'endpoint `POST /api/v1/locations/route` reçoit les coordonnées GPS du départ et de l'arrivée et retourne la distance routière en mètres/kilomètres ainsi que la durée en secondes/minutes. `ROUTING_BASE_URL` doit désigner la racine d'un serveur compatible avec l'API OSRM ; la variable est vide dans `.env.example`, donc l'endpoint répond explicitement « service indisponible » tant qu'aucun moteur n'est configuré. Un délai maximal de cinq secondes est appliqué et les réponses absentes ou invalides ne sont pas remplacées par une distance estimée.
+L'endpoint `POST /api/v1/locations/route` reçoit les coordonnées GPS du départ et de l'arrivée et retourne la distance routière en mètres/kilomètres ainsi que la durée en secondes/minutes. `ROUTING_BASE_URL` doit désigner la racine d'un serveur compatible avec l'API OSRM ; la variable est vide dans `.env.example`, donc l'endpoint répond explicitement « service indisponible » tant qu'aucun moteur n'est configuré. Pour le profil Docker local, utiliser `http://osrm:5000` dans `.env`. Un délai maximal de cinq secondes est appliqué et les réponses absentes ou invalides ne sont pas remplacées par une distance estimée.
+
+Pour préparer un moteur local avec les données du Tchad : lancer `.\scripts\setup-osrm.ps1` dans PowerShell à la racine du dépôt avec Docker Desktop démarré. Le script télécharge l'extrait Geofabrik et exécute les étapes OSRM extract, partition et customize. Les données téléchargées sont volumineuses, ne sont pas suivies par Git et doivent être actualisées séparément. Après préparation, démarrer les services avec `docker compose --profile routing up --build`. Le profil voiture standard OSRM ne fournit pas de trafic en temps réel. Respecter l'attribution OpenStreetMap et les conditions de l'ODbL pour l'utilisation et la distribution des données.
+
+**Essai local du 20 octobre 2026 :** OSRM a répondu avec un itinéraire pour `(12.1, 15.03)` → `(12.12, 15.05)` : 20 212,9 mètres et 1 305,6 secondes estimées. L'API Yalla a retourné les mêmes valeurs. Ce test prouve que la chaîne technique fonctionne sur ces deux points ; il ne confirme pas que la route proposée soit la meilleure ou la route réellement empruntée.
 
 Exemple de corps JSON :
 
@@ -121,6 +125,7 @@ Cette intégration ne calcule pas encore un prix ni ne choisit le moteur cartogr
 - [Mapbox — tarifs et licence pour usage véhicule](https://www.mapbox.com/pricing/)
 - [OSRM — API de routage](https://project-osrm.org/docs/v5.24.0/api/)
 - [OSRM — dépôt et licence du moteur](https://github.com/Project-OSRM/osrm-backend)
+- [Geofabrik — extrait OpenStreetMap du Tchad](https://download.geofabrik.de/africa/chad.html)
 - [OpenStreetMap — licence et attribution](https://www.openstreetmap.org/copyright)
 - [OpenStreetMap — politique des tuiles](https://operations.osmfoundation.org/policies/tiles/)
 - [Nominatim public — politique de géocodage](https://operations.osmfoundation.org/policies/nominatim/)

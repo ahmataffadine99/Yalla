@@ -31,6 +31,7 @@ services:
       DATABASE_NAME: ${POSTGRES_DB:-yalla_dev}
       DATABASE_USER: ${POSTGRES_USER:-yalla}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-yalla_dev_only}
+      ROUTING_BASE_URL: ${ROUTING_BASE_URL:-}
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
@@ -39,6 +40,15 @@ services:
     depends_on:
       database:
         condition: service_healthy
+
+  osrm:
+    image: osrm/osrm-backend:v5.25.0
+    profiles: ["routing"]
+    command: osrm-routed --algorithm mld /data/chad-latest.osrm
+    ports:
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - ./routing:/data
 
   admin-web:
     build:

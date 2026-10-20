@@ -23,6 +23,7 @@ coverage/
 
 # Local database files and editor workspaces
 postgres-data/
+/routing/
 *.sqlite
 
 # Fichiers propres aux éditeurs et systèmes
