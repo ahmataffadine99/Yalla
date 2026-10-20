@@ -12,13 +12,13 @@ const steps: Step[] = [
   },
   {
     number: '02',
-    title: 'Consultez votre estimation',
-    description: 'Le prix sera affiché avant la confirmation de votre demande.',
+    title: 'Choisissez votre véhicule',
+    description: 'Comparez les prix de Yalla Express, Standard et Ousra.',
   },
   {
     number: '03',
-    title: 'Retrouvez votre chauffeur',
-    description: 'Suivez les étapes de votre course depuis votre téléphone.',
+    title: 'Réservez votre trajet',
+    description: 'La réservation en ligne sera bientôt disponible.',
   },
 ];
 

@@ -21,9 +21,9 @@ L'évaluation préliminaire du routage à N'Djamena et le protocole de validatio
 
 L'inscription client demande un numéro et une adresse e-mail. Le numéro est conservé sans vérification SMS pour l'instant ; l'adresse est confirmée par un lien envoyé via SMTP. Les étapes de configuration sont décrites dans [docs/AUTHENTIFICATION_EMAIL.md](./docs/AUTHENTIFICATION_EMAIL.md).
 
-Le calculateur de prix de l'API applique des taux provisoires (prise en charge de 1 000 FCFA, 350 FCFA/km, 10 FCFA/minute, minimum de 1 000 FCFA) pour afficher une estimation côté client. Ces taux restent à valider sur le terrain ; les réservations ne sont pas encore disponibles.
+Le calculateur de prix de l'API applique des taux provisoires (prise en charge de 1 000 FCFA, 350 FCFA/km, 10 FCFA/minute, minimum de 1 000 FCFA) pour afficher une estimation côté client. Après le devis, le site propose Yalla Express (prix de base), Yalla Standard (+500 FCFA) et Yalla Ousra (van, +1 000 FCFA). Ces tarifs et suppléments restent à valider sur le terrain ; les réservations ne sont pas encore disponibles.
 
-L'API expose `POST /api/v1/locations/route` pour obtenir la distance routière, la durée estimée et la géométrie depuis un serveur compatible OSRM (`ROUTING_BASE_URL`), ainsi que `POST /api/v1/locations/place-name` pour nommer un point via un service de géocodage inversé (`PLACE_NAME_BASE_URL`). Le site client permet de choisir les points sur une carte et d'afficher le trajet et son estimation tarifaire. Les coordonnées choisies sont envoyées au fournisseur de noms de lieux. La réservation n'est pas encore disponible ; voir [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md) avant toute utilisation.
+L'API expose `POST /api/v1/locations/route` pour obtenir la distance routière, la durée estimée et la géométrie depuis un serveur compatible OSRM (`ROUTING_BASE_URL`), ainsi que `POST /api/v1/locations/place-name` pour nommer un point via un service de géocodage inversé (`PLACE_NAME_BASE_URL`). Le site client permet de choisir les points sur une carte, de voir le prix calculé, puis de comparer les options de véhicule sur `/offres`. Les coordonnées choisies sont envoyées au fournisseur de noms de lieux. La réservation n'est pas encore disponible ; voir [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md) avant toute utilisation.
 
 ## Démarrage local
 

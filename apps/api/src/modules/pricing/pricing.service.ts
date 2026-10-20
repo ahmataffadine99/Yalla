@@ -7,6 +7,12 @@ import {
   type FareRates,
 } from './pricing-calculator';
 
+const vehicleSurcharges = [
+  { vehicleType: 'express', surchargeXaf: 0 },
+  { vehicleType: 'standard', surchargeXaf: 500 },
+  { vehicleType: 'ousra', surchargeXaf: 1000 },
+] as const;
+
 @Injectable()
 export class PricingService {
   constructor(private readonly config: ConfigService) {}
@@ -18,7 +24,15 @@ export class PricingService {
   calculateRouteFare(
     distanceKm: number,
     durationMinutes: number,
-  ): { fareXaf: number; minimumFareXaf: number; rates: FareRates } {
+  ): {
+    fareXaf: number;
+    minimumFareXaf: number;
+    rates: FareRates;
+    vehicleOptions: {
+      vehicleType: (typeof vehicleSurcharges)[number]['vehicleType'];
+      fareXaf: number;
+    }[];
+  } {
     const rates = {
       baseFareXaf: this.config.getOrThrow<number>('FARE_BASE_XAF'),
       pricePerKilometerXaf: this.config.getOrThrow<number>(
@@ -36,6 +50,14 @@ export class PricingService {
       rates,
     });
 
-    return { fareXaf, minimumFareXaf: MINIMUM_FARE_XAF, rates };
+    return {
+      fareXaf,
+      minimumFareXaf: MINIMUM_FARE_XAF,
+      rates,
+      vehicleOptions: vehicleSurcharges.map(({ vehicleType, surchargeXaf }) => ({
+        vehicleType,
+        fareXaf: fareXaf + surchargeXaf,
+      })),
+    };
   }
 }

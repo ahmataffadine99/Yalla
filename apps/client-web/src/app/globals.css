@@ -391,6 +391,148 @@ h1 span {
   color: #9b352a;
 }
 
+.offers-page {
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(235, 241, 224, 0.8), transparent 45%),
+    var(--cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 48px 24px;
+}
+
+.offers-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  max-width: 540px;
+  padding: 34px;
+  width: 100%;
+}
+
+.offers-card .eyebrow {
+  margin-bottom: 12px;
+}
+
+.offers-card h1 {
+  font-size: 30px;
+  letter-spacing: -0.05em;
+}
+
+.offers-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 12px 0 22px;
+}
+
+.offers-route {
+  background: #f6f7f2;
+  border-radius: 7px;
+  display: grid;
+  gap: 13px;
+  padding: 14px;
+}
+
+.offers-route > div small,
+.offers-route > div strong {
+  display: block;
+}
+
+.offers-route > div small {
+  color: #8a958e;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.offers-route > div strong {
+  color: #33463c;
+  font-size: 12px;
+}
+
+.offers-route > p {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 0;
+}
+
+.vehicle-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.vehicle-option {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  justify-content: space-between;
+  min-height: 72px;
+  padding: 14px 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.vehicle-option.is-selected {
+  background: var(--green-pale);
+  border-color: #aac9b6;
+}
+
+.vehicle-option:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.vehicle-option-copy,
+.vehicle-option-price {
+  display: grid;
+  gap: 5px;
+}
+
+.vehicle-option-copy strong,
+.vehicle-option-price {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.vehicle-option-copy small,
+.vehicle-option-price small {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.vehicle-option-price {
+  color: var(--green-dark);
+  text-align: right;
+}
+
+.offers-notice,
+.offers-message {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 16px 0 0;
+}
+
+.offers-back {
+  color: var(--green-dark);
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 22px;
+  text-decoration: none;
+}
+
 .steps-section {
   padding-bottom: 82px;
   padding-top: 94px;
@@ -763,6 +905,16 @@ h2 {
 }
 
 @media (max-width: 560px) {
+  .offers-card {
+    padding: 25px 20px;
+  }
+
+  .offers-page {
+    justify-content: flex-start;
+    padding-bottom: 24px;
+    padding-top: 36px;
+  }
+
   .auth-page {
     justify-content: flex-start;
     padding-bottom: 24px;

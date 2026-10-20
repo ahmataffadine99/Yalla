@@ -242,6 +242,11 @@ test('calculates a route fare using the configured provisional XAF rates', () =>
       pricePerKilometerXaf: 350,
       pricePerMinuteXaf: 10,
     },
+    vehicleOptions: [
+      { vehicleType: 'express', fareXaf: 3796 },
+      { vehicleType: 'standard', fareXaf: 4296 },
+      { vehicleType: 'ousra', fareXaf: 4796 },
+    ],
   });
 });
 
@@ -257,6 +262,27 @@ test('includes the 1000 XAF base fare on short routes', () => {
   });
 
   assert.equal(service.calculateRouteFare(0.5, 1).fareXaf, 1185);
+});
+
+test('adds the configured provisional surcharge to standard and van offers', () => {
+  const service = new PricingService({
+    getOrThrow(key) {
+      return {
+        FARE_BASE_XAF: 1000,
+        FARE_PRICE_PER_KILOMETER_XAF: 350,
+        FARE_PRICE_PER_MINUTE_XAF: 10,
+      }[key];
+    },
+  });
+
+  assert.deepEqual(
+    service.calculateRouteFare(0.5, 1).vehicleOptions,
+    [
+      { vehicleType: 'express', fareXaf: 1185 },
+      { vehicleType: 'standard', fareXaf: 1685 },
+      { vehicleType: 'ousra', fareXaf: 2185 },
+    ],
+  );
 });
 
 test('returns a route and server-calculated fare from the quote endpoint', async () => {
@@ -277,6 +303,11 @@ test('returns a route and server-calculated fare from the quote endpoint', async
           pricePerKilometerXaf: 350,
           pricePerMinuteXaf: 10,
         },
+        vehicleOptions: [
+          { vehicleType: 'express', fareXaf: 3796 },
+          { vehicleType: 'standard', fareXaf: 4296 },
+          { vehicleType: 'ousra', fareXaf: 4796 },
+        ],
       }),
     },
   );
@@ -290,5 +321,10 @@ test('returns a route and server-calculated fare from the quote endpoint', async
       pricePerKilometerXaf: 350,
       pricePerMinuteXaf: 10,
     },
+    vehicleOptions: [
+      { vehicleType: 'express', fareXaf: 3796 },
+      { vehicleType: 'standard', fareXaf: 4296 },
+      { vehicleType: 'ousra', fareXaf: 4796 },
+    ],
   });
 });

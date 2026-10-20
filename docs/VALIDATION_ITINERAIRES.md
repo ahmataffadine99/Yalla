@@ -12,7 +12,7 @@ La règle de calcul initiale retenue est :
 
 `prix estimé = max(1 000 FCFA, prise en charge + distance routière × tarif/km + durée × tarif/minute + suppléments)`
 
-Pour l'essai, les montants provisoires communiqués par le propriétaire du projet sont une prise en charge de **1 000 FCFA**, **350 FCFA/km** et **10 FCFA/minute**, avec un minimum de **1 000 FCFA**. Aucun supplément n'est appliqué. Ces valeurs sont configurables avec `FARE_BASE_XAF`, `FARE_PRICE_PER_KILOMETER_XAF` et `FARE_PRICE_PER_MINUTE_XAF`. Elles ne sont pas encore validées par une enquête auprès des chauffeurs et clients de N'Djamena et ne doivent pas être présentées comme des tarifs commerciaux définitifs.
+Pour l'essai, les montants provisoires communiqués par le propriétaire du projet sont une prise en charge de **1 000 FCFA**, **350 FCFA/km** et **10 FCFA/minute**, avec un minimum de **1 000 FCFA**. Le devis présente trois catégories : Yalla Express au tarif de base, Yalla Standard avec **500 FCFA** de supplément et Yalla Ousra (van) avec **1 000 FCFA** de supplément. Ces valeurs sont calculées par l'API, restent provisoires et ne sont pas encore validées par une enquête auprès des chauffeurs et clients de N'Djamena ; elles ne doivent pas être présentées comme des tarifs commerciaux définitifs.
 
 L'endpoint `POST /locations/quote` demande d'abord l'itinéraire au serveur, puis calcule le tarif avec ces paramètres. Le client ne transmet ni distance ni prix et ne décide pas du montant. L'estimation affichée est indicative ; la réservation et le verrouillage d'un prix accepté ne sont pas encore implémentés.
 

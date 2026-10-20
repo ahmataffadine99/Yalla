@@ -1,7 +1,9 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { CircleMarker, Map, Polyline } from 'leaflet';
+import { ROUTE_QUOTE_STORAGE_KEY } from './route-quote';
 
 type Coordinates = {
   latitude: number;
@@ -19,6 +21,10 @@ type RoadRoute = {
     pricePerKilometerXaf: number;
     pricePerMinuteXaf: number;
   };
+  vehicleOptions: {
+    vehicleType: 'express' | 'standard' | 'ousra';
+    fareXaf: number;
+  }[];
 };
 
 type RouteApiResponse = RoadRoute;
@@ -33,6 +39,7 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api/v1';
 
 export function RoutePreview() {
+  const router = useRouter();
   const mapElementRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const originMarkerRef = useRef<CircleMarker | null>(null);
@@ -261,6 +268,33 @@ export function RoutePreview() {
     }
   }
 
+  function openVehicleSelection() {
+    if (!route) {
+      return;
+    }
+
+    try {
+      sessionStorage.setItem(
+        ROUTE_QUOTE_STORAGE_KEY,
+        JSON.stringify({
+          originLabel,
+          destinationLabel,
+          distanceKm: route.distanceKm,
+          durationMinutes: route.durationMinutes,
+          fareXaf: route.fareXaf,
+          vehicleOptions: route.vehicleOptions,
+        }),
+      );
+    } catch {
+      setError(
+        'Impossible de conserver cette estimation. Vérifiez les paramètres de stockage du navigateur et réessayez.',
+      );
+      return;
+    }
+
+    router.push('/offres');
+  }
+
   return (
     <div className="route-card">
       <div
@@ -313,11 +347,11 @@ export function RoutePreview() {
           onClick={calculateRoute}
           type="button"
         >
-          {isLoading ? 'Calcul du trajet…' : 'Afficher le trajet'}
+          {isLoading ? 'Calcul du prix…' : 'Voir le prix'}
         </button>
         {route && (
           <p aria-live="polite" className="route-result">
-            <small>ESTIMATION DU PRIX</small>
+            <small>ESTIMATION YALLA EXPRESS</small>
             <strong>
               {route.fareXaf.toLocaleString('fr-FR')} FCFA
             </strong>
@@ -325,14 +359,16 @@ export function RoutePreview() {
             <span>
               Environ {route.durationMinutes.toFixed(0)} min, hors trafic.
             </span>
-            <small>
-              Base {route.rates.baseFareXaf.toLocaleString('fr-FR')} FCFA,{' '}
-              {route.rates.pricePerKilometerXaf.toLocaleString('fr-FR')} FCFA/km
-              et {route.rates.pricePerMinuteXaf.toLocaleString('fr-FR')}{' '}
-              FCFA/min. Minimum de{' '}
-              {route.minimumFareXaf.toLocaleString('fr-FR')} FCFA.
-            </small>
           </p>
+        )}
+        {route && (
+          <button
+            className="route-submit"
+            onClick={openVehicleSelection}
+            type="button"
+          >
+            Voir les véhicules
+          </button>
         )}
         {error && (
           <p aria-live="assertive" className="route-error">
@@ -341,8 +377,8 @@ export function RoutePreview() {
         )}
         <p className="booking-notice">
           Les points choisis sont transmis à OpenStreetMap pour nommer les
-          lieux. Prix indicatif, modifiable avant le lancement ; réservation
-          bientôt disponible.
+          lieux. Les tarifs Standard et Ousra s’affichent après le choix du
+          véhicule ; réservation bientôt disponible.
         </p>
       </div>
     </div>
