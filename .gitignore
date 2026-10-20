@@ -1,0 +1,24 @@
+# Documents de cadrage conserves localement, hors du dépôt
+/CAHIER_DES_CHARGES.md
+/ARCHITECTURE.md
+
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+
+# Dépendances et sorties de build
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Fichiers propres aux éditeurs et systèmes
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
