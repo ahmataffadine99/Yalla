@@ -10,7 +10,7 @@
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/modules/database/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/modules/database/data-source.ts",
     "migration:show": "typeorm-ts-node-commonjs migration:show -d src/modules/database/data-source.ts",
-    "test": "npm run build && node --test test/health.controller.test.cjs"
+    "test": "npm run build && node --test test/*.test.cjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

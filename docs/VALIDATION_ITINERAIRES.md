@@ -6,9 +6,11 @@
 
 Pour un devis, le téléphone fournit ou laisse choisir les coordonnées GPS du départ et de l'arrivée. Le serveur demande ensuite un itinéraire routier en mode voiture. Le moteur renvoie notamment la distance routière, la durée estimée et la géométrie du parcours. Le serveur calcule alors le tarif ; le navigateur ou le téléphone ne décide jamais du prix.
 
-Les montants de la formule restent à déterminer avec des données locales :
+La règle de calcul initiale retenue est :
 
-`prix estimé = max(prix minimum, prise en charge + distance routière × prix au kilomètre)`
+`prix estimé = max(1 000 FCFA, prise en charge + distance routière × tarif/km + durée × tarif/minute + suppléments)`
+
+Le minimum de 1 000 FCFA est confirmé comme règle de départ et pourra être modifié. Les montants de prise en charge, au kilomètre et à la minute, ainsi que les suppléments applicables, restent à fixer avec des données locales. Ils ne doivent pas être inventés ni activés avant validation.
 
 L'estimation doit être datée et temporaire. Le serveur conserve les points choisis, la distance calculée, le fournisseur/version de carte, la règle tarifaire utilisée et l'expiration du devis. Une fois la demande confirmée, le prix doit suivre une règle explicite. Pour le pilote, la recommandation est de verrouiller le prix accepté pour le trajet confirmé ; tout changement important de destination ou demande de détour doit déclencher une nouvelle confirmation du prix.
 
@@ -61,7 +63,7 @@ Avant d'afficher un prix comme fiable :
 4. Comparer les chemins et distances à l'expérience du chauffeur. Faire examiner les écarts importants et les routes inventées, impossibles ou inaccessibles avant de considérer le fournisseur utilisable.
 5. Tester les cas d'échec : point hors réseau, départ sur une route non carrossable, itinéraire absent, réseau coupé et changement de destination.
 6. Demander les tarifs locaux de carburant, entretien, frais et revenus visés aux personnes concernées. Fixer ensuite la prise en charge, le prix/km, le minimum, l'arrondi en XAF et les règles de modification/annulation.
-7. Faire valider la grille tarifaire avec les chauffeurs et des clients potentiels, puis présenter clairement l'estimation avant confirmation, comme le parcours de réservation de référence Uber/Bolt. Leurs prix et règles d'autres pays ne sont pas transposables automatiquement au Tchad.
+7. Faire valider les montants et suppléments avec les chauffeurs et des clients potentiels, puis présenter clairement l'estimation avant confirmation, comme le parcours de réservation de référence Uber/Bolt. Leurs prix et règles d'autres pays ne sont pas transposables automatiquement au Tchad.
 
 Chaque mesure de terrain doit noter la date, le profil du véhicule, la période et le contexte. Les blocages routiers et la qualité du réseau peuvent faire varier un trajet. Ne pas déclarer l'itinéraire fiable sur la seule base d'une carte affichée ou d'un unique appel API.
 
@@ -70,7 +72,7 @@ Chaque mesure de terrain doit noter la date, le profil du véhicule, la période
 1. Choisir un fournisseur d'itinéraire et de carte dont les coûts, les conditions d'utilisation et la couverture ont été vérifiés.
 2. Isoler ce fournisseur derrière une interface d'itinéraire dans le module de localisation ; ne pas diffuser son SDK, ses clés serveur ou sa logique dans toute l'application.
 3. Écrire des tests avec des réponses contrôlées : chemin valide, échec de calcul, coordonnées ajustées excessivement, route trop longue, délai dépassé et tarif arrondi.
-4. Faire calculer le devis côté API avec une règle tarifaire versionnée. Refuser explicitement le devis si l'itinéraire est absent ou invalide ; ne pas inventer de distance ou de prix de secours.
+4. Faire calculer le devis côté API avec une règle tarifaire versionnée. Le calculateur initial applique déjà le minimum de 1 000 FCFA et prend les autres taux comme paramètres obligatoires ; il ne choisit pas lui-même des tarifs. Refuser explicitement le devis si l'itinéraire est absent ou invalide ; ne pas inventer de distance ou de prix de secours.
 5. Exposer le devis au client seulement après tests fonctionnels et validation terrain. Le fournisseur choisi restera remplaçable si les essais réels révèlent une couverture insuffisante.
 
 ## Sources
