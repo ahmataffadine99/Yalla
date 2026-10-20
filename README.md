@@ -15,6 +15,8 @@ compose.yaml    PostgreSQL/PostGIS, API, site client et administration web
 
 Les modules métier de l'API sont des frontières de code, pas des fonctionnalités terminées. Leur portée et les règles de contribution figurent dans [apps/api/src/modules/README.md](./apps/api/src/modules/README.md). Le cahier des charges et le document d'architecture détaillée restent des fichiers locaux ignorés par Git.
 
+Les règles de réutilisation des composants et de commentaires pour **tout le projet** sont décrites dans [docs/CONVENTIONS_DE_CODE.md](./docs/CONVENTIONS_DE_CODE.md).
+
 ## Démarrage local
 
 1. Copier `.env.example` vers `.env` et ajuster les valeurs uniquement pour l'environnement local.
