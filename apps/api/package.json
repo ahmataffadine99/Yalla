@@ -6,6 +6,10 @@
     "build": "nest build",
     "start": "node dist/main.js",
     "start:dev": "nest start --watch",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/modules/database/data-source.ts",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/modules/database/data-source.ts",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/modules/database/data-source.ts",
+    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/modules/database/data-source.ts",
     "test": "npm run build && node --test test/health.controller.test.cjs"
   },
   "dependencies": {
@@ -13,10 +17,12 @@
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/swagger": "^11.4.7",
     "@nestjs/terminus": "^11.0.0",
     "@nestjs/typeorm": "^11.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "joi": "^18.3.0",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
