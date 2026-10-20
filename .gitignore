@@ -16,6 +16,14 @@ coverage/
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+.turbo/
+.cache/
+*.log
+*.tsbuildinfo
+
+# Local database files and editor workspaces
+postgres-data/
+*.sqlite
 
 # Fichiers propres aux éditeurs et systèmes
 .idea/

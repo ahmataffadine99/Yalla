@@ -1,0 +1,43 @@
+services:
+  database:
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-yalla_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-yalla}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yalla_dev_only}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-18081}:5432"
+    volumes:
+      - yalla-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: npm run api:dev
+    environment:
+      API_PORT: 3000
+      ADMIN_WEB_ORIGIN: http://localhost:3001
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB:-yalla_dev}
+      DATABASE_USER: ${POSTGRES_USER:-yalla}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-yalla_dev_only}
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./apps/api:/app/apps/api
+      - /app/node_modules
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  yalla-postgres-data:
