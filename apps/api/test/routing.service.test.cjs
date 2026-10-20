@@ -4,6 +4,8 @@ const { plainToInstance } = require('class-transformer');
 const { validate } = require('class-validator');
 const { PlaceNameService } = require('../dist/modules/locations/place-name.service');
 const { RoutingService } = require('../dist/modules/locations/routing.service');
+const { PricingService } = require('../dist/modules/pricing/pricing.service');
+const { LocationsController } = require('../dist/modules/locations/locations.controller');
 const { PlaceNameDto } = require('../dist/modules/locations/place-name.dto');
 const { RouteRequestDto } = require('../dist/modules/locations/route-request.dto');
 
@@ -219,4 +221,74 @@ test('validates reverse-geocoding coordinates', async () => {
     longitude: 181,
   });
   assert.ok((await validate(dto)).length > 0);
+});
+
+test('calculates a route fare using the configured provisional XAF rates', () => {
+  const service = new PricingService({
+    getOrThrow(key) {
+      return {
+        FARE_BASE_XAF: 250,
+        FARE_PRICE_PER_KILOMETER_XAF: 100,
+        FARE_PRICE_PER_MINUTE_XAF: 10,
+      }[key];
+    },
+  });
+
+  assert.deepEqual(service.calculateRouteFare(7.6517, 11.72), {
+    fareXaf: 1133,
+    minimumFareXaf: 1000,
+    rates: {
+      baseFareXaf: 250,
+      pricePerKilometerXaf: 100,
+      pricePerMinuteXaf: 10,
+    },
+  });
+});
+
+test('keeps short route quotes at the 1000 XAF minimum', () => {
+  const service = new PricingService({
+    getOrThrow(key) {
+      return {
+        FARE_BASE_XAF: 250,
+        FARE_PRICE_PER_KILOMETER_XAF: 100,
+        FARE_PRICE_PER_MINUTE_XAF: 10,
+      }[key];
+    },
+  });
+
+  assert.equal(service.calculateRouteFare(0.5, 1).fareXaf, 1000);
+});
+
+test('returns a route and server-calculated fare from the quote endpoint', async () => {
+  const route = {
+    distanceKm: 7.6517,
+    durationMinutes: 11.72,
+    coordinates: [],
+  };
+  const controller = new LocationsController(
+    { getRoute: async () => route },
+    {},
+    {
+      calculateRouteFare: () => ({
+        fareXaf: 1133,
+        minimumFareXaf: 1000,
+        rates: {
+          baseFareXaf: 250,
+          pricePerKilometerXaf: 100,
+          pricePerMinuteXaf: 10,
+        },
+      }),
+    },
+  );
+
+  assert.deepEqual(await controller.getQuote(request), {
+    ...route,
+    fareXaf: 1133,
+    minimumFareXaf: 1000,
+    rates: {
+      baseFareXaf: 250,
+      pricePerKilometerXaf: 100,
+      pricePerMinuteXaf: 10,
+    },
+  });
 });

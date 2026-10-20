@@ -1,6 +1,6 @@
 # Validation des trajets et des tarifs à N'Djamena
 
-**État : recherche préliminaire, aucun fournisseur sélectionné, aucun tarif activé.**
+**État : essai technique OSRM et estimation tarifaire provisoire ; précision des routes et montants à valider sur le terrain.**
 
 L'API contient maintenant une première intégration de routage compatible avec le protocole OSRM. Un profil Docker Compose et un script PowerShell permettent de préparer localement l'extrait OpenStreetMap du Tchad avec OSRM. Aucun service public n'est utilisé par défaut. Cette étape technique ne valide pas encore la précision des routes à N'Djamena.
 
@@ -12,7 +12,9 @@ La règle de calcul initiale retenue est :
 
 `prix estimé = max(1 000 FCFA, prise en charge + distance routière × tarif/km + durée × tarif/minute + suppléments)`
 
-Le minimum de 1 000 FCFA est confirmé comme règle de départ et pourra être modifié. Les montants de prise en charge, au kilomètre et à la minute, ainsi que les suppléments applicables, restent à fixer avec des données locales. Ils ne doivent pas être inventés ni activés avant validation.
+Pour l'essai, les montants provisoires communiqués par le propriétaire du projet sont une prise en charge de **250 FCFA**, **100 FCFA/km** et **10 FCFA/minute**, avec un minimum de **1 000 FCFA**. Aucun supplément n'est appliqué. Ces valeurs sont configurables avec `FARE_BASE_XAF`, `FARE_PRICE_PER_KILOMETER_XAF` et `FARE_PRICE_PER_MINUTE_XAF`. Elles ne sont pas encore validées par une enquête auprès des chauffeurs et clients de N'Djamena et ne doivent pas être présentées comme des tarifs commerciaux définitifs.
+
+L'endpoint `POST /locations/quote` demande d'abord l'itinéraire au serveur, puis calcule le tarif avec ces paramètres. Le client ne transmet ni distance ni prix et ne décide pas du montant. L'estimation affichée est indicative ; la réservation et le verrouillage d'un prix accepté ne sont pas encore implémentés.
 
 L'estimation doit être datée et temporaire. Le serveur conserve les points choisis, la distance calculée, le fournisseur/version de carte, la règle tarifaire utilisée et l'expiration du devis. Une fois la demande confirmée, le prix doit suivre une règle explicite. Pour le pilote, la recommandation est de verrouiller le prix accepté pour le trajet confirmé ; tout changement important de destination ou demande de détour doit déclencher une nouvelle confirmation du prix.
 
@@ -106,8 +108,8 @@ Chaque mesure de terrain doit noter la date, le profil du véhicule, la période
 1. Choisir un fournisseur d'itinéraire et de carte dont les coûts, les conditions d'utilisation et la couverture ont été vérifiés.
 2. Isoler ce fournisseur derrière une interface d'itinéraire dans le module de localisation ; ne pas diffuser son SDK, ses clés serveur ou sa logique dans toute l'application.
 3. Écrire des tests avec des réponses contrôlées : chemin valide, échec de calcul, coordonnées ajustées excessivement, route trop longue, délai dépassé et tarif arrondi.
-4. Faire calculer le devis côté API avec une règle tarifaire versionnée. Le calculateur initial applique déjà le minimum de 1 000 FCFA et prend les autres taux comme paramètres obligatoires ; il ne choisit pas lui-même des tarifs. Refuser explicitement le devis si l'itinéraire est absent ou invalide ; ne pas inventer de distance ou de prix de secours.
-5. Exposer le devis au client seulement après tests fonctionnels et validation terrain. Le fournisseur choisi restera remplaçable si les essais réels révèlent une couverture insuffisante.
+4. Faire calculer le devis côté API avec une règle tarifaire versionnée. Le calculateur applique le minimum de 1 000 FCFA, les taux provisoires configurés et aucun supplément. Refuser explicitement le devis si l'itinéraire est absent ou invalide ; ne pas inventer de distance ou de prix de secours.
+5. L'estimation provisoire est affichée au client pour tester le parcours. Avant tout lancement, valider les montants sur le terrain et remplacer ou confirmer ces taux ; le fournisseur de routage restera remplaçable si les essais réels révèlent une couverture insuffisante.
 
 ### Intégration API préparée
 

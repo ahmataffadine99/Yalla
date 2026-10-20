@@ -12,6 +12,13 @@ type RoadRoute = {
   distanceKm: number;
   durationMinutes: number;
   coordinates: Coordinates[];
+  fareXaf: number;
+  minimumFareXaf: number;
+  rates: {
+    baseFareXaf: number;
+    pricePerKilometerXaf: number;
+    pricePerMinuteXaf: number;
+  };
 };
 
 type RouteApiResponse = RoadRoute;
@@ -224,7 +231,7 @@ export function RoutePreview() {
     setRoute(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/locations/route`, {
+      const response = await fetch(`${API_BASE_URL}/locations/quote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -310,10 +317,21 @@ export function RoutePreview() {
         </button>
         {route && (
           <p aria-live="polite" className="route-result">
+            <small>ESTIMATION DU PRIX</small>
+            <strong>
+              {route.fareXaf.toLocaleString('fr-FR')} FCFA
+            </strong>
             <strong>{route.distanceKm.toFixed(2)} km</strong>
             <span>
               Environ {route.durationMinutes.toFixed(0)} min, hors trafic.
             </span>
+            <small>
+              Base {route.rates.baseFareXaf.toLocaleString('fr-FR')} FCFA,{' '}
+              {route.rates.pricePerKilometerXaf.toLocaleString('fr-FR')} FCFA/km
+              et {route.rates.pricePerMinuteXaf.toLocaleString('fr-FR')}{' '}
+              FCFA/min. Minimum de{' '}
+              {route.minimumFareXaf.toLocaleString('fr-FR')} FCFA.
+            </small>
           </p>
         )}
         {error && (
@@ -323,7 +341,8 @@ export function RoutePreview() {
         )}
         <p className="booking-notice">
           Les points choisis sont transmis à OpenStreetMap pour nommer les
-          lieux. Estimation hors trafic ; réservation bientôt disponible.
+          lieux. Prix indicatif, modifiable avant le lancement ; réservation
+          bientôt disponible.
         </p>
       </div>
     </div>

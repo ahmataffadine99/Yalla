@@ -376,6 +376,15 @@ h1 span {
   color: var(--green-dark);
 }
 
+.route-result > strong:first-child {
+  font-size: 18px;
+}
+
+.route-result small {
+  color: #5e7466;
+  font-size: 10px;
+}
+
 .route-error {
   background: #fff1ee;
   color: #9b352a;
