@@ -24,8 +24,12 @@ async function bootstrap(): Promise<void> {
       forbidNonWhitelisted: true,
     }),
   );
+  // Le site client et l'administration sont distincts, mais partagent cette API.
   app.enableCors({
-    origin: config.get<string>('ADMIN_WEB_ORIGIN', 'http://localhost:3001'),
+    origin: [
+      config.get<string>('ADMIN_WEB_ORIGIN', 'http://localhost:3001'),
+      config.get<string>('CLIENT_WEB_ORIGIN', 'http://localhost:3002'),
+    ],
   });
   app.enableShutdownHooks();
 

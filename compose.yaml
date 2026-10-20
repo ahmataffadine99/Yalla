@@ -25,6 +25,7 @@ services:
     environment:
       API_PORT: 3000
       ADMIN_WEB_ORIGIN: http://localhost:3001
+      CLIENT_WEB_ORIGIN: http://localhost:3002
       DATABASE_HOST: database
       DATABASE_PORT: 5432
       DATABASE_NAME: ${POSTGRES_DB:-yalla_dev}
@@ -52,6 +53,20 @@ services:
       - ./apps/admin-web:/app/apps/admin-web
       - /app/node_modules
       - /app/apps/admin-web/.next
+    depends_on:
+      - api
+
+  client-web:
+    build:
+      context: .
+      dockerfile: apps/client-web/Dockerfile
+    command: npm run client-web:dev
+    ports:
+      - "127.0.0.1:3002:3002"
+    volumes:
+      - ./apps/client-web:/app/apps/client-web
+      - /app/node_modules
+      - /app/apps/client-web/.next
     depends_on:
       - api
 

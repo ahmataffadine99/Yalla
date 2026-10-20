@@ -31,6 +31,9 @@ import { VehiclesModule } from './modules/vehicles/vehicles.module';
         ADMIN_WEB_ORIGIN: Joi.string()
           .uri({ scheme: ['http', 'https'] })
           .default('http://localhost:3001'),
+        CLIENT_WEB_ORIGIN: Joi.string()
+          .uri({ scheme: ['http', 'https'] })
+          .default('http://localhost:3002'),
         DATABASE_HOST: Joi.string().default('localhost'),
         DATABASE_PORT: Joi.number()
           .integer()

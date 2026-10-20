@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "apps/api",
-    "apps/admin-web"
+    "apps/admin-web",
+    "apps/client-web"
   ],
   "overrides": {
     "@nestjs/swagger": {
@@ -16,7 +17,9 @@
     "api:build": "npm run build --workspace=@yalla/api",
     "api:test": "npm run test --workspace=@yalla/api",
     "web:dev": "npm run dev --workspace=@yalla/admin-web",
-    "web:build": "npm run build --workspace=@yalla/admin-web"
+    "web:build": "npm run build --workspace=@yalla/admin-web",
+    "client-web:dev": "npm run dev --workspace=@yalla/client-web",
+    "client-web:build": "npm run build --workspace=@yalla/client-web"
   },
   "engines": {
     "node": ">=22.0.0",
