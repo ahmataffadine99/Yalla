@@ -17,6 +17,8 @@ Les modules métier de l'API sont des frontières de code, pas des fonctionnalit
 
 Les règles de réutilisation des composants et de commentaires pour **tout le projet** sont décrites dans [docs/CONVENTIONS_DE_CODE.md](./docs/CONVENTIONS_DE_CODE.md).
 
+L'évaluation préliminaire du routage à N'Djamena et le protocole de validation terrain sont décrits dans [docs/VALIDATION_ITINERAIRES.md](./docs/VALIDATION_ITINERAIRES.md). Aucun fournisseur ni tarif n'y est déclaré validé.
+
 ## Démarrage local
 
 1. Copier `.env.example` vers `.env` et ajuster les valeurs uniquement pour l'environnement local.
